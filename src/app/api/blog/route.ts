@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
 
     // Auto-generate slug and check uniqueness
     let slug = generateSlug(title);
-    let originalSlug = slug;
+    const originalSlug = slug;
     let count = 1;
     while (true) {
       const conflict = await prisma.blogPost.findUnique({ where: { slug } });
