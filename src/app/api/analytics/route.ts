@@ -20,12 +20,12 @@ export async function GET() {
       _count: { id: true },
     });
 
-    const leadsByStatus = leadsByStatusRaw.reduce((acc: any, item) => {
+    const leadsByStatus = leadsByStatusRaw.reduce((acc: any, item: any) => {
       acc[item.status] = item._count.id;
       return acc;
     }, {});
 
-    const leadsBySource = leadsBySourceRaw.reduce((acc: any, item) => {
+    const leadsBySource = leadsBySourceRaw.reduce((acc: any, item: any) => {
       acc[item.inquirySource] = item._count.id;
       return acc;
     }, {});
@@ -37,7 +37,7 @@ export async function GET() {
       _count: { id: true },
     });
     
-    const apptsByStatus = apptsByStatusRaw.reduce((acc: any, item) => {
+    const apptsByStatus = apptsByStatusRaw.reduce((acc: any, item: any) => {
       acc[item.status] = item._count.id;
       return acc;
     }, {});
@@ -79,12 +79,12 @@ export async function GET() {
       },
     });
 
-    const callsByType = callsByTypeRaw.reduce((acc: any, item) => {
+    const callsByType = callsByTypeRaw.reduce((acc: any, item: any) => {
       acc[item.type] = item._count.id;
       return acc;
     }, {});
 
-    const callsByOutcome = callsByOutcomeRaw.reduce((acc: any, item) => {
+    const callsByOutcome = callsByOutcomeRaw.reduce((acc: any, item: any) => {
       acc[item.outcome] = item._count.id;
       return acc;
     }, {});
