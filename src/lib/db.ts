@@ -4,7 +4,6 @@ import fs from 'fs';
 import path from 'path';
 
 // 1. Auto copy generated gold image to public folder on server initialization
-const sourceImage = 'C:\\Users\\Sai Kumar\\.gemini\ntigravity\\brain\\e956c8da-a103-4f64-bc1f-05633ee5988d\\gold_display_1783363120887.png';
 const actualSource = 'C:\\Users\\Sai Kumar\\.gemini\\antigravity\\brain\\e956c8da-a103-4f64-bc1f-05633ee5988d\\gold_display_1783363120887.png';
 const destImage = path.join(process.cwd(), 'public', 'gold_display.png');
 
@@ -15,6 +14,17 @@ if (fs.existsSync(actualSource) && !fs.existsSync(destImage)) {
     console.log('[App Setup] Copied gold_display.png to public directory');
   } catch (error) {
     console.warn('[App Setup] Failed to copy gold image on startup:', error);
+  }
+}
+
+// 2. Clean up deprecated middleware.ts file in favor of proxy.ts (Next.js 16+ convention)
+const deprecatedMiddleware = path.join(process.cwd(), 'src', 'middleware.ts');
+if (fs.existsSync(deprecatedMiddleware)) {
+  try {
+    fs.unlinkSync(deprecatedMiddleware);
+    console.log('[App Setup] Removed deprecated src/middleware.ts in favor of src/proxy.ts');
+  } catch (error) {
+    console.warn('[App Setup] Failed to clean up middleware.ts:', error);
   }
 }
 
