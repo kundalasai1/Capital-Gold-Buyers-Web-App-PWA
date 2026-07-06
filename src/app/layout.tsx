@@ -38,13 +38,13 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </head>
       <body className="flex flex-col min-h-screen bg-charcoal-950 text-slate-100">
+        <PWARegistration />
         <Navbar />
         <main className="flex-grow pb-16 md:pb-0">
           {children}
         </main>
         <Footer />
         <CallAgentWidget />
-        <PWARegistration />
       </body>
     </html>
   );

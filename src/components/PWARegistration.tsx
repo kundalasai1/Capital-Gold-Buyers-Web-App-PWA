@@ -53,28 +53,25 @@ export default function PWARegistration() {
   if (!showBanner) return null;
 
   return (
-    <div className="fixed bottom-24 left-6 right-6 md:left-6 md:right-auto md:w-[360px] z-50 glass border border-gold-600/30 rounded-lg p-4 shadow-2xl flex items-center justify-between animate-slide-in max-w-[calc(100vw-3rem)]">
-      <div className="flex items-center space-x-3">
-        <div className="h-10 w-10 bg-gold-600/10 rounded-full flex items-center justify-center border border-gold-600/25 shrink-0">
-          <Download className="h-5 w-5 text-gold-600 animate-bounce" />
-        </div>
-        <div className="text-xs">
-          <p className="font-bold text-white">Install Web App</p>
-          <p className="text-gray-400 text-[10px]">Access live gold rates offline & book visits instantly.</p>
-        </div>
+    <div className="w-full bg-gold-600/10 border-b border-gold-600/20 text-slate-100 py-3 px-4 md:px-8 text-xs flex flex-col sm:flex-row items-center justify-between gap-3 z-[999] relative animate-slide-in">
+      <div className="flex items-center space-x-2.5 text-center sm:text-left">
+        <Download className="h-4 w-4 text-gold-600 animate-bounce shrink-0 hidden sm:block" />
+        <span className="font-semibold tracking-wide">
+          Experience <strong className="text-gold-600 font-bold">Capital Gold</strong> as an app: get instant offline gold valuations, live spot rates, and rapid branch bookings!
+        </span>
       </div>
-      <div className="flex items-center space-x-2 shrink-0 ml-3">
+      <div className="flex items-center space-x-3 shrink-0">
         <button
           onClick={handleInstallApp}
-          className="px-3.5 py-1.5 bg-gold-600 hover:bg-gold-500 text-black font-bold rounded text-[10px] uppercase tracking-wider transition-colors"
+          className="px-4 py-1.5 bg-gold-600 hover:bg-gold-500 text-black font-extrabold rounded text-[10px] uppercase tracking-wider transition-all duration-300 btn-gold-glow shadow-md"
         >
-          Install
+          Install App
         </button>
         <button
           onClick={() => setShowBanner(false)}
-          className="text-gray-400 hover:text-white p-1"
+          className="text-gray-400 hover:text-white p-1 transition-colors"
         >
-          <X className="h-4.5 w-4.5" />
+          <X className="h-4 w-4" />
         </button>
       </div>
     </div>
