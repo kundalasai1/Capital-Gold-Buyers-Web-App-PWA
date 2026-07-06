@@ -1,0 +1,139 @@
+datasource db {
+  provider = "sqlite"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String
+  password  String   // Hashed password
+  role      String   // "ADMIN" | "STAFF"
+  branchId  String?
+  branch    Branch?  @relation(fields: [branchId], references: [id])
+  leads     Lead[]   @relation("LeadAssignment")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Branch {
+  id           String        @id @default(uuid())
+  name         String
+  address      String
+  phone        String
+  email        String
+  hours        String        // Business hours template (e.g. "Mon-Fri: 9:00 AM - 6:00 PM, Sat: 10:00 AM - 4:00 PM, Sun: Closed")
+  mapUrl       String
+  isActive     Boolean       @default(true)
+  users        User[]
+  appointments Appointment[]
+  leads        Lead[]
+  agents       Agent[]
+  callLogs     CallLog[]
+  createdAt    DateTime      @default(now())
+}
+
+model GoldRate {
+  id           String           @id @default(uuid())
+  metal        String           // "GOLD" | "SILVER"
+  purity       String           // "24K" | "22K" | "18K" | "999" etc.
+  ratePerGram  Float
+  ratePerTola  Float
+  isPublished  Boolean          @default(true)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  updatedBy    String
+  changeLogs   RateChangeLog[]
+}
+
+model RateChangeLog {
+  id            String   @id @default(uuid())
+  rateId        String
+  rate          GoldRate @relation(fields: [rateId], references: [id], onDelete: Cascade)
+  previousValue Float
+  newValue      Float
+  changedBy     String
+  changedAt     DateTime @default(now())
+}
+
+model Appointment {
+  id           String   @id @default(uuid())
+  branchId     String
+  branch       Branch   @relation(fields: [branchId], references: [id])
+  slotDate     String   // YYYY-MM-DD
+  slotTime     String   // HH:MM
+  customerName String
+  phone        String
+  email        String
+  status       String   // "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED" | "COMPLETED"
+  notes        String?
+  createdAt    DateTime @default(now())
+}
+
+model Lead {
+  id            String   @id @default(uuid())
+  name          String
+  phone         String
+  email         String
+  inquirySource String   // "CONTACT_FORM" | "CALCULATOR" | "APPOINTMENT" | "AGENT_CALL"
+  branchId      String?
+  branch        Branch?  @relation(fields: [branchId], references: [id])
+  inquiryDate   DateTime @default(now())
+  status        String   // "NEW" | "CONTACTED" | "INTERESTED" | "SCHEDULED" | "CONVERTED" | "CLOSED"
+  notes         String?  // JSON string containing timestamped activity history
+  assignedToId  String?
+  assignedTo    User?    @relation("LeadAssignment", fields: [assignedToId], references: [id])
+  createdAt     DateTime @default(now())
+}
+
+model Agent {
+  id        String    @id @default(uuid())
+  name      String
+  phone     String
+  branchId  String
+  branch    Branch    @relation(fields: [branchId], references: [id])
+  isOnline  Boolean   @default(true)
+  priority  Int       @default(1)
+  callLogs  CallLog[]
+}
+
+model CallLog {
+  id              String   @id @default(uuid())
+  agentId         String?
+  agent           Agent?   @relation(fields: [agentId], references: [id])
+  branchId        String?
+  branch          Branch?  @relation(fields: [branchId], references: [id])
+  type            String   // "INSTANT" | "CALLBACK"
+  outcome         String   // "CONNECTED" | "MISSED" | "CALLBACK_REQUESTED"
+  durationSeconds Int      @default(0)
+  createdAt       DateTime @default(now())
+}
+
+model BlogPost {
+  id              String   @id @default(uuid())
+  title           String
+  slug            String   @unique
+  body            String   // Content
+  category        String
+  tags            String   // Comma separated
+  featuredImage   String
+  isPublished     Boolean  @default(true)
+  metaTitle       String
+  metaDescription String
+  metaKeywords    String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model EmailLog {
+  id           String   @id @default(uuid())
+  recipient    String
+  subject      String
+  templateName String
+  status       String   // "SENT" | "FAILED"
+  errorMessage String?
+  createdAt    DateTime @default(now())
+}

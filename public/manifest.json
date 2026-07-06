@@ -1,0 +1,23 @@
+{
+  "name": "Capital Gold Buyers",
+  "short_name": "Capital Gold",
+  "description": "Convert gold & silver into instant cash value with live precious metal pricing, appraisals, and bookings.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#070a10",
+  "theme_color": "#070a10",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
