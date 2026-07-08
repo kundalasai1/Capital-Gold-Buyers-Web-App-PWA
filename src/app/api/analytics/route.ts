@@ -1,6 +1,31 @@
 import { NextResponse } from 'next/server';
+import type { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db';
 import { getSessionUser } from '@/lib/auth';
+
+type CountByKey = Record<string, number>;
+
+type BranchAnalyticsRow = {
+  id: string;
+  name: string;
+  _count: {
+    leads: number;
+    appointments: number;
+  };
+};
+
+const branchAnalyticsArgs = {
+  select: {
+    id: true,
+    name: true,
+    _count: {
+      select: {
+        leads: true,
+        appointments: true,
+      },
+    },
+  },
+} satisfies Prisma.BranchFindManyArgs;
 
 export async function GET() {
   try {
@@ -20,12 +45,12 @@ export async function GET() {
       _count: { id: true },
     });
 
-    const leadsByStatus = leadsByStatusRaw.reduce((acc: any, item: any) => {
+    const leadsByStatus = leadsByStatusRaw.reduce<CountByKey>((acc, item) => {
       acc[item.status] = item._count.id;
       return acc;
     }, {});
 
-    const leadsBySource = leadsBySourceRaw.reduce((acc: any, item: any) => {
+    const leadsBySource = leadsBySourceRaw.reduce<CountByKey>((acc, item) => {
       acc[item.inquirySource] = item._count.id;
       return acc;
     }, {});
@@ -37,24 +62,13 @@ export async function GET() {
       _count: { id: true },
     });
     
-    const apptsByStatus = apptsByStatusRaw.reduce((acc: any, item: any) => {
+    const apptsByStatus = apptsByStatusRaw.reduce<CountByKey>((acc, item) => {
       acc[item.status] = item._count.id;
       return acc;
     }, {});
 
     // 3. Branch performance statistics
-    const branchesRaw = await prisma.branch.findMany({
-      select: {
-        id: true,
-        name: true,
-        _count: {
-          select: {
-            leads: true,
-            appointments: true,
-          },
-        },
-      },
-    });
+    const branchesRaw: BranchAnalyticsRow[] = await prisma.branch.findMany(branchAnalyticsArgs);
 
     const branchAnalytics = branchesRaw.map((b) => ({
       branchId: b.id,
@@ -79,12 +93,12 @@ export async function GET() {
       },
     });
 
-    const callsByType = callsByTypeRaw.reduce((acc: any, item: any) => {
+    const callsByType = callsByTypeRaw.reduce<CountByKey>((acc, item) => {
       acc[item.type] = item._count.id;
       return acc;
     }, {});
 
-    const callsByOutcome = callsByOutcomeRaw.reduce((acc: any, item: any) => {
+    const callsByOutcome = callsByOutcomeRaw.reduce<CountByKey>((acc, item) => {
       acc[item.outcome] = item._count.id;
       return acc;
     }, {});
